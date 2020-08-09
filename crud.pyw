@@ -1,13 +1,13 @@
-import tkinter
+#import tkinter
 import sqlite3
-from tkinter import tix
+from tkinter import *
 
 class BaseDeDatos:
 
     def __init__(self):
 
-        self.db = sqlite3.connect("database.db")
-        self.cursor = self.db.cursor()
+        self.conexion = sqlite3.connect("database.db")
+        self.cursor = self.conexion.cursor()
         try:
             self.cursor.execute('''
                 CREATE TABLE PRODUCTOS (
@@ -23,15 +23,21 @@ class BaseDeDatos:
             print("La tabla ya existe")
 
     def __del__(self):
-        self.db.close()
+        self.conexion.close()
 
     def insertar(self, nombre, apellido, password, direccion, comentarios):
         comando = "INSERT INTO PRODUCTOS VALUES(NULL,'{}','{}','{}','{}','{}')".format(nombre, password, apellido, direccion, comentarios)
         self.cursor.execute(comando)
-        self.db.commit()
+        self.conexion.commit()
 
-
+    def leer(self, id):
+        comando = "SELECT * FROM PRODUCTOS WHERE ID='{}'".format(id)
+        self.cursor.execute(comando)
+        return self.cursor.fetchall()
 
 db = BaseDeDatos()
+#db.insertar("Fabian","Toledo","","","")
+print(db.leer(1))
+
 
 
