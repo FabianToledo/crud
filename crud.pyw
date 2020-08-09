@@ -22,13 +22,16 @@ class BaseDeDatos:
         except sqlite3.OperationalError:
             print("La tabla ya existe")
 
-
     def __del__(self):
         self.db.close()
-        
+
+    def insertar(self, nombre, apellido, password, direccion, comentarios):
+        comando = "INSERT INTO PRODUCTOS VALUES(NULL,'{}','{}','{}','{}','{}')".format(nombre, password, apellido, direccion, comentarios)
+        self.cursor.execute(comando)
+        self.db.commit()
+
+
 
 db = BaseDeDatos()
-
-
 
 
