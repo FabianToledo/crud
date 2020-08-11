@@ -35,9 +35,47 @@ class BaseDeDatos:
         self.cursor.execute(comando)
         return self.cursor.fetchall()
 
+    def actualizar(self, id, nombre, apellido, password, direccion, comentarios):
+        # comando = "SELECT * FROM PRODUCTOS WHERE ID='{}'".format(id)
+        # self.cursor.execute(comando)
+        # if self.cursor.fetchall()
+        coma = 0
+        comando = "UPDATE PRODUCTOS SET"
+        if nombre:
+            comando = comando + " NOMBRE_USUARIO = '{}'".format(nombre)
+            coma = 1
+        if password:
+            if coma:
+                comando = comando + ","
+            comando = comando + " PASSWORD = '{}'".format(password)
+            coma = 1
+        if apellido:
+            if coma:
+                comando = comando + ","
+            comando = comando + " APELLIDO = '{}'".format(apellido)
+            coma = 1
+        if direccion:
+            if coma:
+                comando = comando + ","
+            comando = comando + " DIRECCION = '{}'".format(direccion)
+            coma = 1
+        if comentarios:
+            if coma:
+                comando = comando + ","
+            comando = comando + " COMENTARIOS = '{}'".format(comentarios)
+        comando = comando + " WHERE ID = '{}'".format(id)
+        self.cursor.execute(comando)
+        self.conexion.commit()       
+
+    def borrar(self, id):
+        comando = "DELETE FROM PRODUCTOS WHERE ID = '{}'".format(id)
+        self.cursor.execute(comando)
+        self.conexion.commit()
+
 db = BaseDeDatos()
-#db.insertar("Fabian","Toledo","","","")
+# #db.insertar("Fabian","Toledo","","","")
 print(db.leer(1))
-
-
+# db.actualizar("2","Fabian","Toledo","password","Necochea 1256","Comentarios varios")
+# db.borrar(1)
+# print(db.leer(1))
 
