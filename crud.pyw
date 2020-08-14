@@ -36,9 +36,6 @@ class BaseDeDatos:
         return self.cursor.fetchall()
 
     def actualizar(self, id, nombre, apellido, password, direccion, comentarios):
-        # comando = "SELECT * FROM PRODUCTOS WHERE ID='{}'".format(id)
-        # self.cursor.execute(comando)
-        # if self.cursor.fetchall()
         coma = 0
         comando = "UPDATE PRODUCTOS SET"
         if nombre:
@@ -78,4 +75,8 @@ print(db.leer(1))
 # db.actualizar("2","Fabian","Toledo","password","Necochea 1256","Comentarios varios")
 # db.borrar(1)
 # print(db.leer(1))
+main = Tk('Fabian','nombrebase','Aplicación CRUD')
 
+
+
+main.mainloop()
