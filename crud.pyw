@@ -78,7 +78,7 @@ db = BaseDeDatos()
 main = Tk('Fabian','nombrebase','Aplicación CRUD')
 
 frame1 = Frame(main)
-frame1.pack()
+frame1.grid(row=0, column=0)
 
 nombre_entry = Entry(frame1)
 nombre_entry.grid(row=0, column=1, padx=10, pady=10)
@@ -108,5 +108,20 @@ scrollV.grid(row=4, column=2, sticky='nsew')
 comentarios_entry.config(yscrollcommand=scrollV.set)
 comentarios_label = Label(frame1, text='Comentarios:')
 comentarios_label.grid(row=4, column=0, padx=10, pady=10)
+
+frame2 = Frame(main)
+frame2.grid(row=1, column=0)
+
+botonCrear = Button(frame2, text='Crear')
+botonCrear.grid(row=0, column=0, padx=10, pady=10)
+
+botonLeer = Button(frame2, text='Leer')
+botonLeer.grid(row=0, column=1, padx=10, pady=10)
+
+botonActualizar = Button(frame2, text='Actualizar')
+botonActualizar.grid(row=0, column=2, padx=10, pady=10)
+
+botonBorrar = Button(frame2, text='Borrar')
+botonBorrar.grid(row=0, column=3, padx=10, pady=10)
 
 main.mainloop()
