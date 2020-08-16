@@ -19,9 +19,10 @@ class BaseDeDatos:
                 DIRECCION VARCHAR(50),
                 COMENTARIOS VARCHAR(100))
             ''')
-            print("Se creó la tabla")
+            # print("Se creó la tabla")
         except sqlite3.OperationalError:
-            print("La tabla ya existe")
+            pass
+            # print("La tabla ya existe")
 
     def __del__(self):
         self.conexion.close()
@@ -125,6 +126,8 @@ class BaseDeDatos:
 db = BaseDeDatos()
 
 main = Tk('Fabian','nombrebase','Aplicación CRUD')
+
+
 
 ult_busqueda_nombre=""
 ult_busqueda_apellido=""
@@ -363,6 +366,33 @@ botonAnterior.grid(row=1, column=3, padx=10, pady=10)
 # botonBuscarPorApellido = Button(frame1, text='Buscar', command=comandoBuscarApellido)
 # botonBuscarPorApellido.grid(row=3, column=3, padx=10, pady=10)
 
+def comandoAbout():
+    messagebox.showinfo("About","Práctica de python")
 
+#Menús
+menubar = Menu(main)
+def hello():
+    print ("hello!")
+# create a pulldown menu, and add it to the menu bar
+filemenu = Menu(menubar, tearoff=0)
+# filemenu.add_command(label="Open", command=hello)
+# filemenu.add_command(label="Save", command=hello)
+filemenu.add_separator()
+filemenu.add_command(label="Exit", command=main.quit)
+menubar.add_cascade(label="File", menu=filemenu)
+
+# create more pulldown menus
+editmenu = Menu(menubar, tearoff=0)
+editmenu.add_command(label="Borrar campos", command=comandoClearFields)
+# editmenu.add_command(label="Copy", command=hello)
+# editmenu.add_command(label="Paste", command=hello)
+menubar.add_cascade(label="Editar", menu=editmenu)
+
+helpmenu = Menu(menubar, tearoff=0)
+helpmenu.add_command(label="About", command=comandoAbout)
+menubar.add_cascade(label="Ayuda", menu=helpmenu)
+
+# display the menu
+main.config(menu=menubar)
 
 main.mainloop()
