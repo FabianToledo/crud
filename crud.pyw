@@ -128,7 +128,6 @@ db = BaseDeDatos()
 main = Tk('Fabian','nombrebase','Aplicación CRUD')
 
 
-
 ult_busqueda_nombre=""
 ult_busqueda_apellido=""
 ult_busqueda_direccion=""
