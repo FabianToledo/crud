@@ -5,9 +5,9 @@ from tkinter import messagebox
 
 class BaseDeDatos:
 
-    def __init__(self):
+    def __init__(self, nombre_archivo):
 
-        self.conexion = sqlite3.connect("database.db")
+        self.conexion = sqlite3.connect(nombre_archivo)
         self.cursor = self.conexion.cursor()
         try:
             self.cursor.execute('''
@@ -26,6 +26,7 @@ class BaseDeDatos:
 
     def __del__(self):
         self.conexion.close()
+        # print("Me muero...")
 
     def insertar(self, nombre, apellido, password, direccion, comentarios):
         comando = "INSERT INTO PRODUCTOS VALUES(NULL,'{}','{}','{}','{}','{}')".format(nombre, password, apellido, direccion, comentarios)
@@ -122,10 +123,11 @@ class BaseDeDatos:
         self.cursor.execute(comando)
         return self.cursor.fetchall()
 
-# Se conecta a la base de datos y se crea un 
-db = BaseDeDatos()
+# Se conecta a la base de datos y se crea un archivo nuevo si es necesario
+db = BaseDeDatos("database.db")
 
-main = Tk('Fabian','nombrebase','Aplicación CRUD')
+main = Tk()
+main.title("Aplicación CRUD")
 
 
 ult_busqueda_nombre=""
@@ -232,10 +234,10 @@ def comandoBorrar():
     if dato:
         ids, nombre, password, apellido, direccion, comentario = dato
         ans = messagebox.askyesno("Borrar",
-        '''¿Está seguro que desea borrar los siguientes datos?:
-Nombre: {}
-Apellido: {}
-Dirección: {}'''.format(nombre,apellido,direccion))
+        "¿Está seguro que desea borrar los siguientes datos?:\n"
+        "Nombre: {}\n"
+        "Apellido: {}\n"
+        "Dirección: {}".format(nombre,apellido,direccion))
         if ans == True:
             db.borrar(data_id.get())
             messagebox.showinfo("Borrar", "El ID {} ha sido borrado con éxito".format(data_id.get()))
@@ -368,17 +370,20 @@ botonAnterior.grid(row=1, column=3, padx=10, pady=10)
 def comandoAbout():
     messagebox.showinfo("About","Práctica de python")
 
+def comandoOpenFile():
+    pass
+
 #Menús
 menubar = Menu(main)
 def hello():
     print ("hello!")
 # create a pulldown menu, and add it to the menu bar
 filemenu = Menu(menubar, tearoff=0)
-# filemenu.add_command(label="Open", command=hello)
+# filemenu.add_command(label="Conectar", command=comandoOpenFile)
 # filemenu.add_command(label="Save", command=hello)
-filemenu.add_separator()
-filemenu.add_command(label="Exit", command=main.quit)
-menubar.add_cascade(label="File", menu=filemenu)
+# filemenu.add_separator()
+filemenu.add_command(label="Salir", command=main.destroy)
+menubar.add_cascade(label="Archivo", menu=filemenu)
 
 # create more pulldown menus
 editmenu = Menu(menubar, tearoff=0)
