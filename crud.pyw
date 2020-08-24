@@ -2,6 +2,7 @@
 import sqlite3
 from tkinter import *
 from tkinter import messagebox
+import pbkdf2, os, base64
 
 class BaseDeDatos:
 
@@ -123,6 +124,8 @@ class BaseDeDatos:
         self.cursor.execute(comando)
         return self.cursor.fetchall()
 
+salt = b'\x8c\xbe\x8e*\xdd\xbe\xbf\\\xb7{\x1e2m\xc3\xae\x16\xef\x90\xaa{\x90!\xb4`\t\xee\x8a!\x90\xb0\\\x14'
+
 # Se conecta a la base de datos y se crea un archivo nuevo si es necesario
 db = BaseDeDatos("database.db")
 
@@ -194,6 +197,8 @@ comentarios_text.delete('0.0', END)
 frame2 = Frame(main)
 frame2.grid(row=1, column=0)
 
+def generar_password(password):
+    return str(base64.standard_b64encode(pbkdf2.PBKDF2(password, salt).read(32)),'utf-8')
 
 def actualizarCampos(dato):
     ids, nombre, password, apellido, direccion, comentario = dato
@@ -206,8 +211,9 @@ def actualizarCampos(dato):
     comentarios_text.insert('1.0', comentario)
 
 def comandoCrear():
+    password = generar_password(data_pass.get())
     comm = comentarios_text.get('1.0', 'end-1c')
-    db.insertar(data_nombre.get(), data_apellido.get(), data_pass.get(), data_direccion.get(), comm)
+    db.insertar(data_nombre.get(), data_apellido.get(), password, data_direccion.get(), comm)
     actualizarCampos(db.getLast())
 
 
@@ -221,7 +227,7 @@ def comandoLeer():
 def comandoActualizar():
     password = ""
     if data_pass.get():
-        password = data_pass.get()
+        password = generar_password(data_pass.get())
 
     dato = db.leer(data_id.get())
     if dato:
@@ -337,6 +343,17 @@ def comandoBuscarApellido():
         messagebox.showinfo("Busqueda", "Se ha alcanzado el final de la lista")
         ult_busqueda_apellido=""
 
+def comandoVerificarPass():
+    pass_to_check = generar_password(data_pass.get())
+    if data_id.get():
+        dato = db.leer(data_id.get())
+        if dato:
+            ids, nombre, password, apellido, direccion, comentario = dato
+            if password == pass_to_check:
+                messagebox.showinfo("Password Correcto", "Ganaste!!")
+            else:
+                messagebox.showerror("Password Incorrecto", "Verifique los datos ingresados")
+
 botonCrear = Button(frame2, text='Crear', command=comandoCrear)
 botonCrear.grid(row=0, column=0, padx=10, pady=10)
 
@@ -366,6 +383,10 @@ botonAnterior.grid(row=1, column=3, padx=10, pady=10)
 
 # botonBuscarPorApellido = Button(frame1, text='Buscar', command=comandoBuscarApellido)
 # botonBuscarPorApellido.grid(row=3, column=3, padx=10, pady=10)
+
+botonVerificarPass = Button(frame1, text='Check', command=comandoVerificarPass)
+botonVerificarPass.grid(row=4, column=3, columnspan=2, padx=10, pady=10)
+
 
 def comandoAbout():
     messagebox.showinfo("About","Práctica de python")
@@ -398,5 +419,6 @@ menubar.add_cascade(label="Ayuda", menu=helpmenu)
 
 # display the menu
 main.config(menu=menubar)
+
 
 main.mainloop()
